@@ -1,0 +1,131 @@
+/* Estilo do botão personalizado */
+.btn-custom {
+  background-color: #4CAF50; /* Verde escuro */
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: #45a049; /* Verde mais claro ao passar o mouse */
+}
+
+/* Estilo para centralizar todo o conteúdo na página */
+.full-height {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Melhorando o título */
+h1 {
+  color: #4CAF50;
+  font-weight: bold;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Ajuste no corpo da página */
+body {
+  background-color: #f4f7f6;
+}
+
+/* Estilo da navbar */
+.navbar-custom {
+  background: linear-gradient(90deg, rgb(30, 143, 10) 0%, rgb(75, 146, 27) 35%, rgb(4, 128, 51) 100%);
+}
+
+/* Estilo do menu hambúrguer e links do menu em branco */
+.navbar-light .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Cor branca para os itens do menu */
+.navbar-light .navbar-nav .nav-link {
+  color: white;
+}
+
+/* Hover nos itens do menu */
+.navbar-light .navbar-nav .nav-link:hover {
+  color: #e2e2e2;
+}
+
+/* Cor do texto na barra de navegação */
+.navbar-text {
+  color: white;
+}
+
+/* Ajustes de responsividade */
+.main-content {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.btn-group {
+  flex-wrap: wrap;
+}
+
+.btn-group .btn {
+  margin: 5px;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 768px) {
+  .navbar-brand img {
+    width: 100px;
+    height: auto;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .btn-custom {
+    width: 100%;
+  }
+
+  footer {
+    text-align: center;
+  }
+}
+
+/* Estilo do footer */
+footer {
+  background: linear-gradient(90deg, rgb(30, 143, 10) 0%, rgb(75, 146, 27) 35%, rgb(4, 128, 51) 100%);
+  padding: 20px;
+  color: white;
+  text-align: center;
+  font-size: 14px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.button-group .btn {
+  margin-right: 10px;
+}
+
