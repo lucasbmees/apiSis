@@ -129,3 +129,413 @@ footer {
   margin-right: 10px;
 }
 
+/* Estilo do modal específico para o popup */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Um pouco mais escuro para o overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px; /* Arredondar mais os cantos */
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: showModal 0.3s ease-out;
+}
+
+/* Título do popup */
+.popup-content h2 {
+  color: #444;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Estilo para o formulário no popup */
+.popup-content .form-group {
+  margin-bottom: 15px;
+}
+
+.popup-content .form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.popup-content .form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc; /* Borda mais clara */
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Botões específicos do popup */
+.popup-content .custom-button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.popup-content .btn-save {
+  background-color: #4CAF50; /* Verde escuro */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup-content .btn-cancel {
+  background-color: #f44336; /* Vermelho */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup-content .btn-save:hover {
+  background-color: #45a049; /* Verde mais claro ao passar o mouse */
+}
+
+.popup-content .btn-cancel:hover {
+  background-color: #d32f2f; /* Vermelho mais escuro ao passar o mouse */
+}
+
+/* Melhorias visuais para o botão de fechar no popup */
+.popup-content .btn-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+}
+
+.popup-content .btn-close:hover {
+  color: #f00; /* Muda a cor quando o mouse passa por cima */
+}
+
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.btn-save {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.btn-save:hover, .btn-cancel:hover {
+  opacity: 0.9;
+}
+
+/* Estilo geral do modal */
+.custom-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: showModal 0.3s ease-out;
+}
+
+@keyframes showModal {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Título do modal */
+.modal-title {
+  font-size: 1.4em;
+  color: #444;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Estilo do grupo de formulário */
+.custom-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Estilo do checkbox */
+.custom-checkbox {
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.custom-checkbox:hover {
+  background-color: #e8f0fe;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+}
+
+.checkbox-input {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.checkbox-text {
+  color: #333;
+}
+
+/* Botões */
+.custom-button-group {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.custom-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.custom-btn-primary {
+  background-color: #28a745;
+  color: white;
+}
+
+.custom-btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.custom-btn-primary:hover {
+  background-color: #218838;
+}
+
+.custom-btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Scrollbar customizado para a checklist */
+.custom-form-group::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-form-group::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.custom-form-group::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+.custom-form-group::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%; /* Define uma largura base de 90% */
+  max-width: 600px; /* Aumenta a largura máxima do modal */
+  max-height: 80vh; /* Limita a altura do modal */
+  overflow-y: auto; /* Adiciona rolagem quando o conteúdo excede o tamanho */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-save {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background-color: #f44336;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.btn-save:hover,
+.btn-cancel:hover {
+  opacity: 0.8;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+}
+
+.btn-close:hover {
+  color: #f00; /* Muda a cor quando o mouse passa por cima */
+}
+
+/* Estilos personalizados para o popup de desbaste */
+.modalDesbaste {
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro com transparência */
+}
+
+.modalDesbasteContent {
+  border-radius: 10px;
+  overflow-y: auto; /* Permite rolagem se o conteúdo for longo */
+  max-height: 80vh; /* Limita a altura do conteúdo */
+}
+
+.modalDesbasteBody {
+  padding: 1.5rem; /* Espaçamento interno para o corpo */
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.modalDesbasteTable {
+  width: 100%; /* Tabela ocupa toda a largura do modal */
+  overflow-x: auto; /* Permite rolagem horizontal se necessário */
+}
+
+.modalDesbasteTable th {
+  background-color: #f8f9fa; /* Cor clara para o cabeçalho da tabela */
+  color: #333; /* Cor escura para o texto do cabeçalho */
+  text-align: center; /* Centraliza o texto no cabeçalho */
+}
+
+.modalDesbasteTable td {
+  text-align: center; /* Centraliza o texto nas células */
+}
+
+.modal-footer {
+  border-top: none; /* Remove a borda superior do rodapé */
+}
+
+.btn-primary {
+  background-color: #28a745; /* Verde mais agradável */
+  border-color: #28a745; /* Mesma cor para a borda */
+}
+
+.btn-primary:hover {
+  background-color: #218838; /* Tom mais escuro no hover */
+  border-color: #1e7e34; /* Mesma cor para a borda no hover */
+}
+
+
+
+
+
+

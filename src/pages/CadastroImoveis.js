@@ -24,6 +24,8 @@ const CadastroImoveis = () => {
     altura_desrama: '',
   });
 
+  const [isArrendado, setIsArrendado] = useState(false);
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -68,13 +70,17 @@ const CadastroImoveis = () => {
     }
   };
 
+  const toggleTipoImovel = (tipo) => {
+    setIsArrendado(tipo === 'arrendado');
+  };
+
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Cadastro de Imóveis</h1>
       
       <div className="text-center mb-4">
-        <button type="button" className="btn btn-secondary mx-2">Próprio</button>
-        <button type="button" className="btn btn-secondary mx-2">Arrendado</button>
+        <button type="button" className={`btn btn-secondary mx-2 ${!isArrendado ? 'active' : ''}`} onClick={() => toggleTipoImovel('proprio')}>Próprio</button>
+        <button type="button" className={`btn btn-secondary mx-2 ${isArrendado ? 'active' : ''}`} onClick={() => toggleTipoImovel('arrendado')}>Arrendado</button>
       </div>
       
       <form onSubmit={handleSubmit}>
@@ -126,10 +132,20 @@ const CadastroImoveis = () => {
           <label htmlFor="data_contrato">Data do Contrato</label>
           <input type="date" className="form-control" id="data_contrato" value={formData.data_contrato} onChange={handleChange} required />
         </div>
-        <div className="form-group">
-          <label htmlFor="vencimento_contrato">Vencimento do Contrato</label>
-          <input type="date" className="form-control" id="vencimento_contrato" value={formData.vencimento_contrato} onChange={handleChange} required />
-        </div>
+
+        {isArrendado && (
+          <>
+            <div className="form-group">
+              <label htmlFor="vencimento_contrato">Vencimento do Contrato</label>
+              <input type="date" className="form-control" id="vencimento_contrato" value={formData.vencimento_contrato} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label htmlFor="arrendatario">Arrendatário</label>
+              <input type="text" className="form-control" id="arrendatario" value={formData.arrendatario} onChange={handleChange} placeholder="Digite o nome do arrendatário" required />
+            </div>
+          </>
+        )}
+
         <div className="form-group">
           <label htmlFor="numero_ccir">Número do CCIR</label>
           <input type="text" className="form-control" id="numero_ccir" value={formData.numero_ccir} onChange={handleChange} placeholder="Digite o número do CCIR" required />
@@ -143,12 +159,8 @@ const CadastroImoveis = () => {
           <input type="text" className="form-control" id="proprietario" value={formData.proprietario} onChange={handleChange} placeholder="Digite o nome do proprietário" required />
         </div>
         <div className="form-group">
-          <label htmlFor="arrendatario">Arrendatário</label>
-          <input type="text" className="form-control" id="arrendatario" value={formData.arrendatario} onChange={handleChange} placeholder="Digite o nome do arrendatário" required />
-        </div>
-        <div className="form-group">
           <label htmlFor="municipio">Município</label>
-          <input type="text" className="form-control" id="municipio" value={formData.municipio} onChange={handleChange} placeholder="Digite o município" required />
+          <input type="text" className="form-control" id="municipio" value={formData.municipio} onChange={handleChange} placeholder="Digite o nome do município" required />
         </div>
         <div className="form-group">
           <label htmlFor="localidade">Localidade</label>
@@ -156,10 +168,10 @@ const CadastroImoveis = () => {
         </div>
         <div className="form-group">
           <label htmlFor="altura_desrama">Altura da Desrama</label>
-          <input type="text" className="form-control" id="altura_desrama" value={formData.altura_desrama} onChange={handleChange} placeholder="Digite a altura da desrama" required />
+          <input type="number" className="form-control" id="altura_desrama" value={formData.altura_desrama} onChange={handleChange} placeholder="Digite a altura da desrama" required />
         </div>
 
-        <button type="submit" className="btn btn-primary">Cadastrar</button>
+        <button type="submit" className="btn btn-primary btn-block">Cadastrar Imóvel</button>
       </form>
     </div>
   );

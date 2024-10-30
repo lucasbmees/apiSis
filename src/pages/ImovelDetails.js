@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
+import ExpenseTablePopup from "./ExpenseTablePopup";
+import RegisterDesramaPopup from "./RegisterDesramaPopup";
+import DesramaTablePopup from "./DesramaTablePopup";
+import RegisterDesbastePopup from "./RegisterDesbastePopup";
+import DesbasteTablePopup from "./DesbasteTablePopup";
 
 const ImovelDetails = () => {
   const { id } = useParams();
+  const [isDesbasteTableOpen, setIsDesbasteTableOpen] = useState(false);
+  const [isDesramaTableOpen, setIsDesramaTableOpen] = useState(false);
+  const [desramaData, setDesramaData] = useState([]);
+  const [despesa, setDespesa] = useState({
+    descricao: "",
+    valor: "",
+    data: "",
+  });
+  const [isExpensePopupOpen, setIsExpensePopupOpen] = useState(false);
+  const [isDesramaPopupOpen, setIsDesramaPopupOpen] = useState(false);
+  const [isDesbastePopupOpen, setIsDesbastePopupOpen] = useState(false);
   const [imovel, setImovel] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -11,6 +27,7 @@ const ImovelDetails = () => {
   const [selectedFields, setSelectedFields] = useState({});
   const [images, setImages] = useState([]);
   const [imageInput, setImageInput] = useState(null);
+  const [isDespesaModalOpen, setIsDespesaModalOpen] = useState(false);
 
   // Fetch property details
   const fetchImovelDetails = async () => {
@@ -19,7 +36,6 @@ const ImovelDetails = () => {
       if (!response.ok) throw new Error("Imóvel não encontrado");
       const data = await response.json();
       setImovel(data);
-      // Fetch images separately
       fetchImages(data.id);
     } catch (error) {
       console.error("Erro ao buscar detalhes do imóvel:", error);
@@ -27,7 +43,6 @@ const ImovelDetails = () => {
     }
   };
 
-  // Fetch images associated with the property
   const fetchImages = async (imovelId) => {
     try {
       const response = await fetch(
@@ -44,12 +59,57 @@ const ImovelDetails = () => {
     fetchImovelDetails();
   }, [id]);
 
-  // Handle input changes
+  useEffect(() => {
+    const fetchDesramas = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/imoveis/${id}/desramas`
+        );
+        const data = await response.json();
+        setDesramaData(data); // Aqui, salve as desramas no estado
+      } catch (error) {
+        console.error("Erro ao buscar desramas:", error);
+      }
+    };
+
+    fetchDesramas();
+  }, [id]);
+
+  const handleOpenExpensePopup = () => {
+    setIsExpensePopupOpen(true);
+  };
+
+  const handleCloseExpensePopup = () => {
+    setIsExpensePopupOpen(false);
+  };
+  const handleOpenDesbastePopup = () => {
+    setIsDesbastePopupOpen(true);
+  };
+
+  const handleCloseDesbastePopup = () => {
+    setIsDesbastePopupOpen(false);
+  };
+
+  const handleOpenDesbasteTable = () => {
+    setIsDesbasteTableOpen(true);
+  };
+
+  const handleCloseDesbasteTable = () => {
+    setIsDesbasteTableOpen(false);
+  };
+
+  const handleDesramaTableOpen = () => {
+    setIsDesramaTableOpen(true);
+  };
+
+  const handleDesramaTableClose = () => {
+    setIsDesramaTableOpen(false);
+  };
+
   const handleChange = (e) => {
     setImovel({ ...imovel, [e.target.name]: e.target.value });
   };
 
-  // Handle property update
   const handleUpdate = async () => {
     try {
       const response = await fetch(`http://localhost:5000/api/imoveis/${id}`, {
@@ -65,7 +125,6 @@ const ImovelDetails = () => {
     }
   };
 
-  // Generate report as PDF
   const handleGenerateReport = () => {
     const doc = new jsPDF();
     doc.text("Relatório do Imóvel", 10, 10);
@@ -83,12 +142,10 @@ const ImovelDetails = () => {
     setIsReportModalOpen(false);
   };
 
-  // Handle field selection for report
   const handleFieldChange = (e) => {
     setSelectedFields({ ...selectedFields, [e.target.name]: e.target.checked });
   };
 
-  // Handle image upload
   const handleImageUpload = async () => {
     if (!imageInput) return;
 
@@ -104,14 +161,13 @@ const ImovelDetails = () => {
         }
       );
       if (!response.ok) throw new Error("Erro ao enviar imagem");
-      fetchImages(id); // Refresh images after upload
+      fetchImages(id);
       setImageInput(null);
     } catch (error) {
       console.error("Erro ao enviar imagem:", error);
     }
   };
 
-  // Handle image removal
   const handleImageRemove = async (imageUrl) => {
     try {
       const response = await fetch(
@@ -123,9 +179,28 @@ const ImovelDetails = () => {
         }
       );
       if (!response.ok) throw new Error("Erro ao remover imagem");
-      fetchImages(id); // Refresh images after deletion
+      fetchImages(id);
     } catch (error) {
       console.error("Erro ao remover imagem:", error);
+    }
+  };
+
+  const handleDespesaChange = (e) => {
+    setDespesa({ ...despesa, [e.target.name]: e.target.value });
+  };
+
+  const handleDespesaSubmit = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/despesas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...despesa, imovel_id: id }),
+      });
+      if (!response.ok) throw new Error("Erro ao adicionar despesa");
+      setIsDespesaModalOpen(false);
+      fetchImovelDetails();
+    } catch (error) {
+      console.error("Erro ao adicionar despesa:", error);
     }
   };
 
@@ -176,7 +251,7 @@ const ImovelDetails = () => {
           )}
           <button
             onClick={() => setIsEditing(true)}
-            className="btn btn-warning"
+            className="btn btn-success"
           >
             Editar
           </button>
@@ -184,60 +259,146 @@ const ImovelDetails = () => {
       )}
 
       <div className="button-group mt-4">
-        <button onClick={() => setIsReportModalOpen(true)} className="btn">
+        <button
+          onClick={() => setIsReportModalOpen(true)}
+          className="btn btn-success"
+        >
           Gerar Relatório
         </button>
-        <button onClick={() => setIsImageModalOpen(true)} className="btn">
+        <button
+          onClick={() => setIsImageModalOpen(true)}
+          className="btn btn-success"
+        >
           Ver Imagens
         </button>
-        <button className="btn">Despesa</button>
-        <button className="btn">Desrama</button>
-        <button className="btn">Desbaste</button>
-        <button className="btn">Inventário</button>
+        <button
+          onClick={() => setIsDespesaModalOpen(true)}
+          className="btn btn-success"
+        >
+          Adicionar Despesa
+        </button>
+        <button onClick={handleOpenExpensePopup} className="btn btn-success">
+          Ver Despesas
+        </button>
+        <button
+          onClick={() => setIsDesramaPopupOpen(true)}
+          className="btn btn-success"
+        >
+          Registrar Desrama
+        </button>
+        <button onClick={handleDesramaTableOpen} className="btn btn-success">
+          Ver Desramas
+        </button>
+        <button className="btn btn-success" onClick={handleOpenDesbastePopup}>
+          Registrar Desbaste
+        </button>
+        <button className="btn btn-success" onClick={handleOpenDesbasteTable}>
+          Ver Desbastes
+        </button>
+        <button className="btn btn-success">Inventário</button>
       </div>
 
-      {/* Modal para Gerar Relatório */}
+      <ExpenseTablePopup
+        isOpen={isExpensePopupOpen}
+        imovelId={id}
+        onClose={handleCloseExpensePopup}
+      />
+
+      <DesbasteTablePopup
+        isOpen={isDesbasteTableOpen}
+        imovelId={id}
+        onClose={handleCloseDesbasteTable}
+      />
+
+      {/* Componente de Registrar Desrama */}
+      <RegisterDesramaPopup
+        isOpen={isDesramaPopupOpen}
+        onClose={() => setIsDesramaPopupOpen(false)}
+        imovelId={id}
+      />
+
+      <DesramaTablePopup
+        isOpen={isDesramaTableOpen}
+        imovelId={id}
+        onClose={handleDesramaTableClose}
+      />
+
+      <RegisterDesbastePopup
+        isOpen={isDesbastePopupOpen}
+        onClose={handleCloseDesbastePopup}
+        imovelId={id}
+      />
+
       {isReportModalOpen && (
-        <div className="modal">
-          <h2>Selecione as Propriedades para o Relatório</h2>
-          {Object.keys(imovel).map(
-            (key) =>
-              key !== "id" && (
-                <div key={key} className="form-group">
-                  <label>
-                    <input
-                      type="checkbox"
-                      name={key}
-                      checked={selectedFields[key] || false}
-                      onChange={handleFieldChange}
-                    />
-                    {key.replace(/_/g, " ").toUpperCase()}
-                  </label>
-                </div>
-              )
-          )}
-          <button onClick={handleGenerateReport} className="btn btn-primary">
-            Gerar PDF
-          </button>
-          <button
-            onClick={() => setIsReportModalOpen(false)}
-            className="btn btn-secondary"
-          >
-            Fechar
-          </button>
+        <div className="custom-modal">
+          <h2 className="modal-title">
+            Selecione as Propriedades para o Relatório
+          </h2>
+          <div className="custom-form-group">
+            {Object.keys(imovel).map(
+              (key) =>
+                key !== "id" && (
+                  <div key={key} className="custom-checkbox">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name={key}
+                        checked={!!selectedFields[key]}
+                        onChange={handleFieldChange}
+                        className="checkbox-input"
+                      />
+                      <span className="checkbox-text">
+                        {key.replace(/_/g, " ").toUpperCase()}
+                      </span>
+                    </label>
+                  </div>
+                )
+            )}
+          </div>
+          <div className="custom-button-group">
+            <button
+              onClick={handleGenerateReport}
+              className="custom-btn custom-btn-primary"
+            >
+              Gerar
+            </button>
+            <button
+              onClick={() => setIsReportModalOpen(false)}
+              className="custom-btn custom-btn-secondary"
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       )}
 
       {/* Modal para Gerenciar Imagens */}
       {isImageModalOpen && (
         <div className="modal">
-          <h2>Gerenciar Imagens</h2>
+          <h2>Imagens</h2>
+          {images.length > 0 ? (
+            <div>
+              {images.map((img, idx) => (
+                <div key={idx} className="image-container">
+                  <img src={img} alt={`Imagem ${idx + 1}`} />
+                  <button
+                    onClick={() => handleImageRemove(img)}
+                    className="btn btn-danger"
+                  >
+                    Remover
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>Nenhuma imagem disponível</p>
+          )}
           <input
             type="file"
             onChange={(e) => setImageInput(e.target.files[0])}
           />
           <button onClick={handleImageUpload} className="btn btn-primary">
-            Adicionar Imagem
+            Enviar Imagem
           </button>
           <button
             onClick={() => setIsImageModalOpen(false)}
@@ -245,25 +406,54 @@ const ImovelDetails = () => {
           >
             Fechar
           </button>
+        </div>
+      )}
 
-          <div className="image-list mt-3">
-            {images.map((image, index) => (
-              <div key={index} className="image-item">
-                <img
-                  src={`http://localhost:5000/${image.file_path}`}
-                  alt={`Imagem ${index}`}
-                  style={{ width: "100px", height: "100px" }}
-                />
-
-                <button
-                  onClick={() => handleImageRemove(image.file_path)}
-                  className="btn btn-danger"
-                >
-                  Remover
-                </button>
-              </div>
-            ))}
-          </div>
+      {/* Modal para adicionar despesas */}
+      {isDespesaModalOpen && (
+        <div className="modal">
+          <h2>Adicionar Despesa</h2>
+          <form>
+            <div className="form-group">
+              <label>Descrição</label>
+              <input
+                type="text"
+                name="descricao"
+                value={despesa.descricao}
+                onChange={handleDespesaChange}
+                className="form-control"
+              />
+            </div>
+            <div className="form-group">
+              <label>Valor</label>
+              <input
+                type="number"
+                name="valor"
+                value={despesa.valor}
+                onChange={handleDespesaChange}
+                className="form-control"
+              />
+            </div>
+            <div className="form-group">
+              <label>Data</label>
+              <input
+                type="date"
+                name="data"
+                value={despesa.data}
+                onChange={handleDespesaChange}
+                className="form-control"
+              />
+            </div>
+            <button onClick={handleDespesaSubmit} className="btn btn-primary">
+              Adicionar
+            </button>
+            <button
+              onClick={() => setIsDespesaModalOpen(false)}
+              className="btn btn-secondary"
+            >
+              Cancelar
+            </button>
+          </form>
         </div>
       )}
     </div>

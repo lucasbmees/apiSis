@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../img/logo.png'; // Importando a imagem diretamente
 
 const Header = () => {
   return (
     <nav className="navbar navbar-light navbar-custom">
       <Link className="navbar-brand" to="/">
-        <img src="../img/logo.png" width="160" height="100" alt="Logo" />
+        <img src={logo} width="200" height="100" alt="Logo" />
       </Link>
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText">
         <span className="navbar-toggler-icon"></span>

@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSearch, FaFilePdf } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const ExpensesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [expenses, setExpenses] = useState([
-    { id: 1, descricao: 'Compra de material de escritório', valor: 150.00, data: '2023-10-01' },
-    { id: 2, descricao: 'Serviço de limpeza', valor: 250.00, data: '2023-10-02' },
-    { id: 3, descricao: 'Despesa de viagem', valor: 500.00, data: '2023-10-03' },
-    // Adicione mais despesas como preferir
-  ]);
+  const [expenses, setExpenses] = useState([]);
+  const [selectedExpenses, setSelectedExpenses] = useState([]);
+
+  useEffect(() => {
+    // Busca todas as despesas da API
+    fetch('http://localhost:5000/api/despesas')
+      .then((response) => response.json())
+      .then((data) => setExpenses(data))
+      .catch((error) => console.error('Erro ao buscar despesas:', error));
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -18,6 +24,34 @@ const ExpensesPage = () => {
   const filteredExpenses = expenses.filter((expense) =>
     expense.descricao.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleCheckboxChange = (expense) => {
+    if (selectedExpenses.includes(expense)) {
+      setSelectedExpenses(selectedExpenses.filter((item) => item.id !== expense.id));
+    } else {
+      setSelectedExpenses([...selectedExpenses, expense]);
+    }
+  };
+
+  const handleGeneratePDF = () => {
+    const doc = new jsPDF();
+    doc.text('Relatório de Despesas', 20, 10);
+
+    // Tabela com despesas selecionadas
+    const tableData = selectedExpenses.map((expense) => [
+      expense.id,
+      expense.descricao,
+      `R$ ${expense.valor.toFixed(2)}`,
+      expense.data,
+    ]);
+
+    doc.autoTable({
+      head: [['ID', 'Descrição', 'Valor', 'Data']],
+      body: tableData,
+    });
+
+    doc.save('relatorio-despesas.pdf');
+  };
 
   return (
     <div className="container mt-4">
@@ -39,6 +73,7 @@ const ExpensesPage = () => {
       <table className="table table-striped table-dark mt-4">
         <thead>
           <tr>
+            <th></th>
             <th>ID</th>
             <th>Descrição</th>
             <th>Valor</th>
@@ -49,6 +84,13 @@ const ExpensesPage = () => {
           {filteredExpenses.length > 0 ? (
             filteredExpenses.map((expense) => (
               <tr key={expense.id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedExpenses.includes(expense)}
+                    onChange={() => handleCheckboxChange(expense)}
+                  />
+                </td>
                 <td>{expense.id}</td>
                 <td>{expense.descricao}</td>
                 <td>R$ {expense.valor.toFixed(2)}</td>
@@ -57,7 +99,7 @@ const ExpensesPage = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="text-center">
+              <td colSpan="5" className="text-center">
                 Nenhuma despesa encontrada.
               </td>
             </tr>
@@ -65,8 +107,8 @@ const ExpensesPage = () => {
         </tbody>
       </table>
       <div className="text-center mt-4">
-        <button className="btn btn-primary">
-          <FaFilePdf /> Gerar Relatório
+        <button className="btn btn-primary" onClick={handleGeneratePDF}>
+          <FaFilePdf /> Gerar Relatório PDF
         </button>
       </div>
     </div>
