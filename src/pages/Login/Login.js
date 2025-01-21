@@ -13,7 +13,7 @@ const Login = ({ onLoginSuccess }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5001/api/login', { username, password });
+      const response = await axios.post('http://195.35.40.166:5001/api/login', { username, password });
       onLoginSuccess(); // Atualiza o estado de autenticação
       navigate('/'); // Redireciona para a página inicial após o login
     } catch (err) {
