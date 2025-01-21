@@ -28,10 +28,16 @@ const CadastroImoveis = () => {
   const [codigoCCExists, setCodigoCCExists] = useState(false);
   const [popup, setPopup] = useState({ message: '', type: '' }); // Estado do popup
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
-  };
+  const handleChange = async (e) => {
+  const { id, value } = e.target;
+  setFormData({ ...formData, [id]: value });
+
+  if (id === "codigo_cc") {
+    const exists = await checkCodigoCCExists(value);
+    setCodigoCCExists(exists);
+  }
+};
+
 
   const checkCodigoCCExists = async (codigo_cc) => {
     try {
